@@ -1,0 +1,29 @@
+{
+  "name": "contatooh",
+  "description": "Projeto MEIN",
+  "main": "index.js",
+  "authors": [
+    "Adriano Reis"
+  ],
+  "license": "ISC",
+  "keywords": [
+    "AngularJS",
+    "NodeJS",
+    "MongoDB",
+    "Express"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "angular": "1.3",
+    "angular-route": "1.3",
+    "bootstrap": "^3.3.6",
+    "angular-resource": "1.3"
+  }
+}
