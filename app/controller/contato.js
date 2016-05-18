@@ -4,6 +4,7 @@ module.exports = function(app){
 	var verificaAutenticacao = require('../../config/auth');
 	var controller = app.controller.contato;
 	var contatos = [];
+	var sanitize = require('mongo-sanitize');
 
 	controller.listarTodos = function(req, res){
 		Contato.find().populate('emergencia').exec()
@@ -36,7 +37,7 @@ module.exports = function(app){
 	};
 
 	controller.removeContato = function(req, res){
-		var _id = req.params.id;
+		var _id = sanitize(req.params.id);
 		Contato.remove({"_id": _id}).exec()
 			.then(
 				function(){
@@ -51,10 +52,16 @@ module.exports = function(app){
 
 	controller.salvaContato = function(req, res){
 		var _id = req.body._id;
-
+		
 		req.body.emergencia = req.body.emergencia || null;
 		if(_id) {
-			Contato.findByIdAndUpdate(_id, req.body).exec()
+			var dados = {
+				"nome": req.body.nome,
+				"email": req.body.email,
+				"emergencia": req.body.emergencia || null
+			};
+
+			Contato.findByIdAndUpdate(_id, dados).exec()
 				.then(
 					function(contato) {
 						res.json(contato);
@@ -65,7 +72,7 @@ module.exports = function(app){
 					}
 				);
 		}else {
-			Contato.create(req.body)
+			Contato.create(dados)
 			.then(
 				function(contato) {
 					res.status(201).json(contato);
@@ -76,7 +83,7 @@ module.exports = function(app){
 				}
 			);
 		}
-	};	
+	};
 
 	app.route('/contatos')
 		.get(verificaAutenticacao, controller.listarTodos)
@@ -85,7 +92,6 @@ module.exports = function(app){
 	app.route('/contatos/:id')
 		.get(verificaAutenticacao, controller.obtemContato)
 		.delete(verificaAutenticacao, controller.removeContato);
-		
 
 	return controller;
-}
+};

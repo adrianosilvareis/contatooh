@@ -28,7 +28,6 @@ module.exports = function (app) {
     app.use(helmet.nosniff());
     app.disable('x-powered-by');
     app.use(helmet.hidePoweredBy({setTo: 'PHP 5.5.14' }));
-    
     app.use(express.static('./public'));
     app.use(bodyParser.urlencoded({extended: true}));
     app.use(bodyParser.json());
@@ -41,6 +40,11 @@ module.exports = function (app) {
             .then('routes/auth.js')
             .then('routes')
             .into(app);
-    
+
+    //se nenhuma rota atender, direciona para 404
+    app.get('*', function(req, res){
+        res.status(404).render('404');
+    });
+
     return app;
 };
